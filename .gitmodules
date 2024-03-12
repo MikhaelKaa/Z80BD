@@ -1,3 +1,6 @@
 [submodule "HW/altium_libs"]
 	path = HW/altium_libs
 	url = https://github.com/MikhaelKaa/altium_libs.git
+[submodule "Z80PrlProg"]
+	path = Z80PrlProg
+	url = https://github.com/MikhaelKaa/Z80PrlProg.git
