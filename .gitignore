@@ -2,3 +2,7 @@
 /HW/Project Logs for Z80BD/*.LOG
 /HW/*.log
 /HW/src/__Previews
+/CPLD/build
+/CPLD/db
+/CPLD/incremental_db
+/CPLD/src/*.bak
