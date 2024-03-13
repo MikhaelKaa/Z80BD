@@ -6,3 +6,4 @@
 /CPLD/db
 /CPLD/incremental_db
 /CPLD/src/*.bak
+/FW/*.bin
