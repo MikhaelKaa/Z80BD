@@ -24,16 +24,39 @@ begin:
     ;ei
     reti
 
-    org 0x0100
+    org 0x100
 start:
     
     ; Устанавливаем дно стека.
-    ld sp, 0x1000 ; 
+    ld sp, 0xffff ; 
 
-    ; Разрешаем прерывания.
-    ;ei   
-    ;jr skip 
+    ld a, 0b00000111
+    out (0xfe), a
+    ld hl, scr_sleep
+    ld de, 0x4000
+    ld bc, 0x1b00
+    ldir
 
+
+main_loop:
+
+    jp main_loop
+
+; Rjev:
+;     incbin "Rjev.scr"
+scr_sleep:
+    incbin "sleep.scr"
+
+; Процедура задержки
+; bc - время
+delay:
+    dec bc
+    ld a, b
+    or c
+    jr nz, delay
+    ret
+
+cls:
     xor a
     out (0xfe), a
     ld hl, 0x4000
@@ -41,29 +64,9 @@ start:
     ld bc, 0x1aff
     ld (hl), a
     ldir
+    ret
 
-    ld a, 0b00000100
-    ld (0x5800), a
-    ld (0x5801), a
-    ld (0x5802), a
-    ld (0x5803), a
-    ld (0x5804), a
-    ld (0x5805), a
-    
-
-    ld a, 0x55
-    ld (16384), a
-    ld a, 0x55
-    ld (16385), a
-    ld a, 0xff
-    ld (16386), a
-    ld a, 0x00
-    ld (16387), a
-    ld a, 0x55
-    ld (16388), a
-
-main_loop:
-
+border:
     ld a, 0b00000000
     out (0xfe), a
     ld a, 0b00000001
@@ -80,18 +83,9 @@ main_loop:
     out (0xfe), a
     ld a, 0b00000111
     out (0xfe), a
-    jp main_loop
-
-; Процедура задержки
-; bc - время
-delay:
-    dec bc
-    ld a, b
-    or c
-    jr nz, delay
     ret
-
+    
 end:
     ; Выводим размер банарника.
     display "code size: ", /d, end - begin
-    SAVEBIN "out.bin", begin, 32768; 32768 - размер бинарного файла для прошивки ПЗУ\ОЗУ
+    SAVEBIN "out.bin", begin, 16384;  размер бинарного файла для прошивки ПЗУ\ОЗУ
