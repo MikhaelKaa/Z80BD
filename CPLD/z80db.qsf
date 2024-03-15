@@ -69,3 +69,5 @@ set_location_assignment PIN_26 -to A[2]
 set_location_assignment PIN_25 -to A[1]
 set_location_assignment PIN_21 -to A14
 set_location_assignment PIN_20 -to A15
+set_location_assignment PIN_18 -to romblk
+set_location_assignment PIN_2 -to iorq

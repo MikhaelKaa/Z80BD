@@ -10,18 +10,19 @@ begin:
 
     org 0x0038 ; 56 
     di
-    ; push af
-    ; push bc
-    ; push hl
-    ; push de
+    push af
+    push bc
+    push hl
+    push de
     ;int programm
-
-    ; end int programm
-    ; pop de
-    ; pop hl
-    ; pop bc
-    ; pop af
-    ;ei
+    ; ld a, 0b00000111
+    ; out (0xfe), a
+    ;end int programm
+    pop de
+    pop hl
+    pop bc
+    pop af
+    ei
     reti
 
     org 0x100
@@ -29,23 +30,30 @@ start:
     
     ; Устанавливаем дно стека.
     ld sp, 0xffff ; 
-
+    ei
+    
     ld a, 0b00000111
     out (0xfe), a
-    ld hl, scr_sleep
+    ld hl, file_dot_scr
     ld de, 0x4000
     ld bc, 0x1b00
     ldir
 
 
 main_loop:
-
+    ld bc, 1024
+    call delay
+    in a, (0xfb)
+    ld bc, 1024
+    call delay
+    in a, (0x7b)
+    ;halt
     jp main_loop
 
-; Rjev:
-;     incbin "Rjev.scr"
-scr_sleep:
-    incbin "sleep.scr"
+
+file_dot_scr:
+    ; incbin "sleep.scr"
+    incbin "Eva.scr"
 
 ; Процедура задержки
 ; bc - время
@@ -85,6 +93,11 @@ border:
     out (0xfe), a
     ret
     
+;     org 16384
+; load_scr:
+;     incbin "sleep.scr"
+
+
 end:
     ; Выводим размер банарника.
     display "code size: ", /d, end - begin
