@@ -1,6 +1,5 @@
 module z80db(
 // CPU
-input clk,
 input reset,
 input bsrq,
 input mreq,
@@ -13,13 +12,16 @@ input A15,
 inout [7:0]D,
 
 // SRAM
-output moe, // rd ;oe
-output mwe, // wr ;we
-output mce, // mreq ;cs
-output ma14,// для переключения банков кеш памяти.
+output moe, 	// rd ;oe
+output mwe, 	// wr ;we
+output mce, 	// mreq ;cs
+output ma14,	// для переключения банков кеш памяти.
 
 // Блокировка штатного ПЗУ.
-output romblk	// rdrom aka rdr. 
+output romblk,	// rdrom aka rdr. 
+
+// Джампер управления.
+input jump
 );
 
 // SRAM
@@ -27,9 +29,9 @@ wire cash_rd = A14 | A15 | rd | mreq;
 wire cash_wr = wr;
 wire cash_mreq = A14 | A15 | mreq;
 
-wire cash_is_act_rd = cash?(cash_rd):(1'b1);
-wire cash_is_act_wr = cash?(cash_wr):(1'b1);
-wire cash_is_act_mreq = cash?(cash_mreq):(1'b1);
+wire cash_is_act_rd = source?(cash_rd):(1'b1);
+wire cash_is_act_wr = source?(cash_wr):(1'b1);
+wire cash_is_act_mreq = source?(cash_mreq):(1'b1);
 
 assign moe = bsrq?(cash_is_act_rd):(cash_rd); // rd
 assign mwe = bsrq?(cash_is_act_wr):(cash_wr); // wr
@@ -37,7 +39,9 @@ assign mce = bsrq?(cash_is_act_mreq):(cash_mreq);  // mreq
 assign ma14 = reg_7ffd[4];
 
 // Блокировка штатного ПЗУ.
-assign romblk = cash | ~bsrq;
+assign romblk = source | ~bsrq;
+
+wire source = cash ^ jump;
 
 reg cash = 1'b0;
 

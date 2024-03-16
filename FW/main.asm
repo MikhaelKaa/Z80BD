@@ -41,6 +41,13 @@ start:
     ld bc, 65535
     call delay
 
+    ; ld hl, font_rus
+    ; ld de, 0x4000
+    ; ld bc, 768
+    ; ldir
+    ; ld bc, 65535
+    ; call delay
+
     ; ld a, 0b00000000
     ; ld hl, 0x4000-1
     ; ld (hl), a
@@ -115,8 +122,10 @@ cnt:
     db 0
 
 file_dot_scr:
-    ; incbin "sleep.scr"
     incbin "Eva.scr"
+
+font_rus:
+    incbin "font_rus.ch8"
 
 ; Процедура задержки
 ; bc - время
