@@ -33,8 +33,8 @@ wire cash_is_act_rd = source?(cash_rd):(1'b1);
 wire cash_is_act_wr = source?(cash_wr):(1'b1);
 wire cash_is_act_mreq = source?(cash_mreq):(1'b1);
 
-assign moe = bsrq?(cash_is_act_rd):(cash_rd); // rd
-assign mwe = bsrq?(cash_is_act_wr):(cash_wr); // wr
+assign moe = bsrq?(cash_is_act_rd):(cash_rd); 		// rd
+assign mwe = bsrq?(cash_is_act_wr):(cash_wr); 		// wr
 assign mce = bsrq?(cash_is_act_mreq):(cash_mreq);  // mreq
 assign ma14 = reg_7ffd[4];
 
@@ -47,10 +47,10 @@ reg cash = 1'b0;
 
 wire iord = iorq | rd;
 wire iowr = iorq | wr;
-//wire p7ffd = ~(A == 253);
-wire p7ffd = ~(A == 253) | ~(A15 == 0) | ~(A14 == 1);
 
-wire p7ffdrd = p7ffd | iord;
+wire p7ffd = ~((A == 253) & (A15 == 0) & (A14 == 1));
+
+wire p7ffdrd = p7ffd | iord; 
 
 reg [7:0] reg_7ffd = 8'b0;
 

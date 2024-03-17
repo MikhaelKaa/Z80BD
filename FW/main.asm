@@ -22,7 +22,7 @@ begin:
     pop hl
     pop bc
     pop af
-    ei
+    ;ei
     reti
 
     org 0x100
@@ -30,8 +30,9 @@ start:
     
     ; Устанавливаем дно стека.
     ld sp, 0xffff ; 
-    ei
-    
+    ;ei
+    di
+
     ld a, 0b00000000
     out (0xfe), a
     ld hl, file_dot_scr
@@ -74,6 +75,11 @@ main_loop:
     ld (hl), a
     ld bc, 0x7ffd 
     out (c), a
+
+    ld bc, 10
+    call delay
+    
+    ld bc, 0x7ffd 
     in a, (c)
     ld hl, 0x4000+32
     ld (hl), a
@@ -85,10 +91,18 @@ main_loop:
     ld hl, 0x4001
     ld (hl), a 
     ld bc, 0x7ffd 
-    out (c), a   
+    out (c), a 
+
+    ld bc, 10
+    call delay
+
+    ld bc, 0x7ffd 
     in a, (c)
     ld hl, 0x4001+32
     ld (hl), a
+    nop
+    nop
+
     ; ld hl, 0x4000
     ; ld de, 0x1b00-768
     ; ld a, (cnt)

@@ -79,3 +79,4 @@ set_location_assignment PIN_19 -to D[1]
 set_location_assignment PIN_20 -to D[0]
 set_location_assignment PIN_40 -to ma14
 set_location_assignment PIN_43 -to jump
+set_global_assignment -name SMART_RECOMPILE ON
