@@ -29,7 +29,7 @@ begin:
 start:
     
     ; Устанавливаем дно стека.
-    ld sp, 0xffff ; 
+    ld sp, 16383 ; 
     ei
     ;di
 
@@ -48,62 +48,54 @@ main_loop:
     ld bc, 500
     call delay
 
-    ; ld hl, test_str
-    ; call print_string
+    ld de, 0x4000
+    ld hl, msg_hello_world
+    call print_string
 
-    ld hl, font_rus + 8*48
-    ld de, 0x400a
-    call print_char
-    
-    ld hl, font_rus + 8*49
-    ld de, 0x400b
-    call print_char
-    
+    ld de, 0x4000+256/8
+    ld hl, msg_sthanks
+    call print_string
+
     ld a, 0b00000000
     out (0xfe), a
     halt
     jp main_loop
 
-; Печатает нуль терминированную строку по адресу hl
+; Печатает нуль терминированную строку
+; hl - адрес строки.
+; de - адрес в экранной области.
 print_string:
-    ld de, 0x4000
-print_string_loop:
     ld a, (hl)
     and a
     ret z
-
-    rla
-    rla
-    rla
-
-    xor b
-    ld c, a
-    ld hl, font_rus
-    adc hl, bc
-
+    push hl
+    ld h, 0
+    ld l, a
+    add hl, hl
+    add hl, hl
+    add hl, hl
+    ld bc, font-8*32 ; -8*32 это пропуск первых непечатных символов ascii 
+    add hl, bc
+    push de
     call print_char
+    pop de
+    pop hl
     inc hl
     inc de
-    jp print_string_loop
+    jp print_string
     ret
 
-; hl адрес символа
-; de адрес на экране
+; Печать символа.
+; hl адрес символа в шрифте.
+; de адрес на экране.
 print_char:
-    push hl
-    push de
-    push bc
     ld b, 8
 pchar_loop:
     ld a, (hl)
     ld (de), a
     inc d
-    inc l
-    dec b
-    jr nz, pchar_loop
-    pop bc
-    pop de
-    pop hl
+    inc hl
+    djnz pchar_loop
     ret
 
 ; HL - это начальный адрес области памяти,
@@ -130,13 +122,16 @@ cash_off:
 cnt:
     db 0
 
-test_str:
-    db "Hello!", 0
+msg_hello_world:
+    db "Hello world!!!", 0
+msg_sthanks:
+    db "Special thanks to JecasNameless!", 0
 
 file_dot_scr:
     incbin "Eva.scr"
 
-font_rus:
+font:
+    incbin "font_en.ch8"
     incbin "font_rus.ch8"
 font_rus_end:
 
