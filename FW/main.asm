@@ -15,14 +15,14 @@ begin:
     push hl
     push de
     ;int programm
-    ld hl, cnt
-    inc (hl)
+    ld a, 0b00000100
+    out (0xfe), a
     ;end int programm
     pop de
     pop hl
     pop bc
     pop af
-    ;ei
+    ei
     reti
 
     org 0x100
@@ -30,8 +30,8 @@ start:
     
     ; Устанавливаем дно стека.
     ld sp, 0xffff ; 
-    ;ei
-    di
+    ei
+    ;di
 
     ld a, 0b00000000
     out (0xfe), a
@@ -41,81 +41,76 @@ start:
     ldir
     ld bc, 65535
     call delay
+    call cls
 
-    ; ld hl, font_rus
-    ; ld de, 0x4000
-    ; ld bc, 768
-    ; ldir
-    ; ld bc, 65535
-    ; call delay
-
-    ; ld a, 0b00000000
-    ; ld hl, 0x4000-1
-    ; ld (hl), a
-    ; ld de, 0x4000
-    ; ld bc, 0x1b00
-    ; ldir
 
 main_loop:
-    ld bc, 10
+    ld bc, 500
     call delay
 
-    ld a, 0xbf
-    in a, (0xfe)
-    bit 2, a
-    call z, cash_on ; k key
+    ; ld hl, test_str
+    ; call print_string
 
-    ld a, 0xbf
-    in a, (0xfe)
-    bit 1, a
-    call z, cash_off ; l key
-
-    ld a, 0b10000010
-    ld hl, 0x4000
-    ld (hl), a
-    ld bc, 0x7ffd 
-    out (c), a
-
-    ld bc, 10
-    call delay
+    ld hl, font_rus + 8*48
+    ld de, 0x400a
+    call print_char
     
-    ld bc, 0x7ffd 
-    in a, (c)
-    ld hl, 0x4000+32
-    ld (hl), a
-
-    ld bc, 100
-    call delay
-
-    ld a, 0b01000000
-    ld hl, 0x4001
-    ld (hl), a 
-    ld bc, 0x7ffd 
-    out (c), a 
-
-    ld bc, 10
-    call delay
-
-    ld bc, 0x7ffd 
-    in a, (c)
-    ld hl, 0x4001+32
-    ld (hl), a
-    nop
-    nop
-
-    ; ld hl, 0x4000
-    ; ld de, 0x1b00-768
-    ; ld a, (cnt)
-    ; call fill_area
-
-    ;halt
+    ld hl, font_rus + 8*49
+    ld de, 0x400b
+    call print_char
+    
+    ld a, 0b00000000
+    out (0xfe), a
+    halt
     jp main_loop
+
+; Печатает нуль терминированную строку по адресу hl
+print_string:
+    ld de, 0x4000
+print_string_loop:
+    ld a, (hl)
+    and a
+    ret z
+
+    rla
+    rla
+    rla
+
+    xor b
+    ld c, a
+    ld hl, font_rus
+    adc hl, bc
+
+    call print_char
+    inc hl
+    inc de
+    jp print_string_loop
+    ret
+
+; hl адрес символа
+; de адрес на экране
+print_char:
+    push hl
+    push de
+    push bc
+    ld b, 8
+pchar_loop:
+    ld a, (hl)
+    ld (de), a
+    inc d
+    inc l
+    dec b
+    jr nz, pchar_loop
+    pop bc
+    pop de
+    pop hl
+    ret
 
 ; HL - это начальный адрес области памяти,
 ; DE - количество байтов для заполнения,
 ; A - байт, которым мы заполняем область памяти.
 fill_area:
-    ld a, (cnt)
+    ;ld a, (cnt)
     ld (hl), a  ; Записываем байт в память по адресу, указанному в HL
     inc hl      ; Увеличиваем HL, чтобы перейти к следующему байту
     dec de      ; Уменьшаем счетчик DE
@@ -135,11 +130,15 @@ cash_off:
 cnt:
     db 0
 
+test_str:
+    db "Hello!", 0
+
 file_dot_scr:
     incbin "Eva.scr"
 
 font_rus:
     incbin "font_rus.ch8"
+font_rus_end:
 
 ; Процедура задержки
 ; bc - время
@@ -155,7 +154,8 @@ cls:
     out (0xfe), a
     ld hl, 0x4000
     ld de, 0x4001
-    ld bc, 0x1aff
+    ;ld bc, 0x1aff
+    ld bc, 2048*3-1
     ld (hl), a
     ldir
     ret
