@@ -17,6 +17,7 @@ begin:
     ;int programm
     ld a, 0b00000100
     out (0xfe), a
+
     ;end int programm
     pop de
     pop hl
@@ -33,31 +34,68 @@ start:
     ei
     ;di
 
+    ; ld a, 0b00000000
+    ; out (0xfe), a
+    ; ld hl, file_dot_scr
+    ; ld de, 0x4000
+    ; ld bc, 0x1b00
+    ; ldir
+    ; ld bc, 65535
+    ; call delay
+    ; call cls
+
+
     ld a, 0b00000000
     out (0xfe), a
-    ld hl, file_dot_scr
+
+    ld hl, Eva0
     ld de, 0x4000
     ld bc, 0x1b00
     ldir
     ld bc, 65535
     call delay
-    call cls
 
+    ld a, 0b00001111
+    ld bc, 0x7ffd 
+    out (c), a
 
-main_loop:
-    ld bc, 500
+    ld hl, Eva1
+    ld de, 0xC000
+    ld bc, 0x1b00
+    ldir
+
+    ld bc, 65535
     call delay
 
-    ld de, 0x4000
-    ld hl, msg_hello_world
-    call print_string
-
-    ld de, 0x4000+256/8
-    ld hl, msg_sthanks
-    call print_string
-
-    ld a, 0b00000000
+main_loop:
+    ld a, 0b00000111
     out (0xfe), a
+
+    ld bc, 1000
+    call delay
+
+    ld a, 0b00000001
+    out (0xfe), a
+
+    ld bc, 942
+    call delay
+
+    ld a, 0b00000010
+    out (0xfe), a
+
+    ld bc, 420
+    call delay
+
+    ; ld a, 0b00000000
+    ; out (0xfe), a
+
+    ld hl, cnt
+    ld a, (hl)
+    xor 0b00001000
+    ld (hl), a
+    ld bc, 0x7ffd 
+    out (c), a 
+
     halt
     jp main_loop
 
@@ -127,8 +165,13 @@ msg_hello_world:
 msg_sthanks:
     db "Special thanks to JecasNameless!", 0
 
-file_dot_scr:
-    incbin "Eva.scr"
+; file_dot_scr:
+;     incbin "Eva.scr"
+
+Eva0:
+    incbin "Eva0.scr"
+Eva1:
+    incbin "Eva1.scr"
 
 font:
     incbin "font_en.ch8"
