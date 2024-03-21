@@ -55,15 +55,15 @@ start:
 
     ;call cls
 
-    ; ld a, 0b00000111
-    ; ld bc, 0x7ffd 
-    ; out (c), a
+    ld a, 0b00000111
+    ld bc, 0x7ffd 
+    out (c), a
 
-    ; xor a
-    ; ld hl, Eva1
-    ; ld de, 0x8000
-    ; ld bc, 0x1800-1
-    ; ldir
+    xor a
+    ld hl, Eva1
+    ld de, 0x8000
+    ld bc, 0x1800-1
+    ldir
 
     ld bc, 65535
     call delay
@@ -72,19 +72,11 @@ main_loop:
     ld a, 0b00000111
     out (0xfe), a
 
-    ld a, 0b00001111
-    ld bc, 0x7ffd 
-    out (c), a
-
     ld bc, 1000
     call delay
 
     ld a, 0b00000001
     out (0xfe), a
-
-    ld a, 0b0000000
-    ld bc, 0x7ffd 
-    out (c), a
 
     ld bc, 942
     call delay
@@ -92,22 +84,18 @@ main_loop:
     ld a, 0b00000010
     out (0xfe), a
 
-    ld a, 0b00001000
+    ld bc, 420
+    call delay
+
+    ; ld a, 0b00000000
+    ; out (0xfe), a
+
+    ld hl, cnt
+    ld a, (hl)
+    xor 0b00001000
+    ld (hl), a
     ld bc, 0x7ffd 
-    out (c), a
-
-
-
-
-    ; ld de, 0x4000
-    ; ld hl, msg_hello_world
-    ; call print_string
-
-    ; ld de, 0x4000+256/8
-    ; ld hl, msg_sthanks
-    ; call print_string
-
-
+    out (c), a 
 
     halt
     jp main_loop
@@ -170,8 +158,8 @@ cash_off:
     in a, (0x7b) ; выключить cash
     ret
 
-; cnt:
-;     db 0
+cnt:
+    db 0
 
 ; msg_hello_world:
 ;     db "Hello world!!!", 0
