@@ -47,7 +47,7 @@ start:
     xor a
     ld hl, Eva0
     ld de, 0x4000
-    ld bc, 0x1800-1
+    ld bc, (256/8)*192+768;0x1800-1
     ldir
 
     ld bc, 65535
@@ -61,8 +61,8 @@ start:
 
     xor a
     ld hl, Eva1
-    ld de, 0x8000
-    ld bc, 0x1800-1
+    ld de, 0xc000
+    ld bc, (256/8)*192+768;0x1800-1
     ldir
 
     ld bc, 65535
