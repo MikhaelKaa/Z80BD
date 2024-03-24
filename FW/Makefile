@@ -1,18 +1,11 @@
 
 build:
-	sjasmplus main.asm --syntax=F --inc
+	sjasmplus src/main.asm --syntax=F --inc="src"
 
 flash:
-	PCProg.exe COM18 out.bin
-
-flash48:
-	PCProg.exe COM18 48.bin
-
-flashff:
-	PCProg.exe COM18 0xff.bin
+	PCProg.exe COM18 build/out.bin
 
 clean:
-	rm -f *.bin
-	#rm -f user.l
+	rm -f build/*.bin
 
 .PHONY: all build clean

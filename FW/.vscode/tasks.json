@@ -43,7 +43,7 @@
       //"label": "Write Z80 BBSRAM",
       "label": "STLink Write MCU Default",
       "type": "shell",
-      "command": "PCProg.exe COM18 out.bin",
+      "command": "PCProg.exe COM18 build/out.bin",
       "options": {
         "cwd": "${workspaceRoot}",
         "shell": {
