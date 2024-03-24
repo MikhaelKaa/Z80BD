@@ -34,20 +34,72 @@ start:
 
     call cls
     call green_paper
-    ld hl, msg_test
-    ld de, 0x0209
+    ld hl, msg_7ffd
+    ld de, 0x0000
     call print_string
 
 main_loop:
+    ld a, 0b0000001
+    ld bc, 0x7ffd
+    out (c), a
+
+    ld bc, 10
+    call delay
+
+    ld bc, 0x7ffd
+    in a, (c)
+
+    ld hl, temp
+    ld (hl), a
+
+    cp a, 0b0000001
+    call z, print_ok
+    ld hl, temp
+    ld a, (hl)
+    cp a, 0b0000001
+    call nz, print_fail
 
     ld bc, 1200
     call delay
+
+    ld a, 0b0000000
+    ld bc, 0x7ffd
+    out (c), a
+
+    ld bc, 10
+    call delay
+
+    ld bc, 0x7ffd
+    in a, (c)
+
+    ld hl, temp
+    ld (hl), a
+
+    cp a, 0b0000000
+    call z, print_ok
+    ld hl, temp
+    ld a, (hl)
+    cp a, 0b0000000
+    call nz, print_fail
+
 
     ld a, 0b00000111
     out (0xfe), a
     halt
     jp main_loop
 
+
+print_ok:
+    ld hl, msg_ok
+    ld de, 0x0008
+    call print_string
+    ret
+
+print_fail:
+    ld hl, msg_fail
+    ld de, 0x0008
+    call print_string
+    ret
 
 cash_on:
     in a, (0xfb) ; включить cash
@@ -57,9 +109,16 @@ cash_off:
     in a, (0x7b) ; выключить cash
     ret
 
-msg_test:
-    db "test", 0
-
+temp:
+    db 0
+msg_7ffd
+    db "0x7ffd: ", 0
+msg_ok:
+    db "OK  ", 0
+msg_fail:
+    db "FAIL", 0
+    display "msg_ok adr: ", /h, msg_ok
+    
 
 ; Процедура задержки
 ; bc - время
