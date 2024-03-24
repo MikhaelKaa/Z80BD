@@ -82,7 +82,6 @@ main_loop:
     cp a, 0b0000000
     call nz, print_fail
 
-
     ld a, 0b00000111
     out (0xfe), a
     halt
