@@ -1,3 +1,5 @@
+// 15.04.2024 Михаил Каа
+
 #ifndef __MAIN__
 #define __MAIN__
 

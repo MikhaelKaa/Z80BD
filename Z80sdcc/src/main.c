@@ -1,3 +1,5 @@
+// 15.04.2024 Михаил Каа
+
 #include "main.h"
 
 #define SCREEN_START_ADR (0x4000)
@@ -5,6 +7,9 @@
 #define SCREEN_ATR_SIZE (768)
 
 void init_screen(void);
+char GetMagicNumber() __naked;
+int get_screen_adr(char x, char y) __naked;
+
 char *screen = 0x4000;
 char w = 0;
 char i = 0;
@@ -19,6 +24,8 @@ void main() {
         *(screen + 4) = key[0];
         *(screen + 6) = key[1];
 
+        *(screen + 8) = GetMagicNumber();
+
         if(irq_0x38_flag) {
             irq_0x38_flag = 0;
             if(!(i%129)) port_0x00fe = w++;
@@ -30,6 +37,8 @@ void main() {
             char tmp = *(screen + 2);
             *(screen + 2) = tmp + 1;
         }
+
+        *(char*)(get_screen_adr(9, 9)) = 0x55;
     }
 }
 
@@ -42,6 +51,38 @@ void init_screen(void) {
         *((char *)i) = 4;
     }
     port_0x00fe = 4;
+}
+
+// Возврашает адрес на экране для координат x и y.
+int get_screen_adr(char x, char y) __naked {
+    __asm
+    ld iy, #2
+    add iy, sp
+    ld d, (iy)
+    ld e, 1(iy)
+    ld a,d
+    and #7
+    rra
+    rra
+    rra
+    rra
+    or e
+    ld e,a
+    ld a,d
+    and #24
+    or #64
+    ld d,a
+    push de
+    pop hl
+    ret 
+    __endasm;
+}
+// https://gist.github.com/Konamiman/af5645b9998c802753023cf1be8a2970
+char GetMagicNumber() __naked {
+    __asm
+    ld l, #85
+    ret
+    __endasm;
 }
 
 volatile void irq_0x38(void) {
