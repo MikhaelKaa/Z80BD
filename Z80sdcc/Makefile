@@ -50,6 +50,14 @@ clean:
 	# Remoe everything except source files
 	rm -f -r $(BUILD_DIR)
 
+.PHONY: font
+font:
+	#convert font
+	rm -f src/font.h
+	touch src/font.h
+	echo -n "const " >> src/font.h
+	xxd -i src/font_en.ch8 >> src/font.h
+
 .PHONY: flash
 flash:
 	PCProg.exe COM18 build/main.bin

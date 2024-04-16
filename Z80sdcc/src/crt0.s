@@ -110,6 +110,7 @@ start:
     ;; call C main function
     call    _main	
 
+
     ;;	(linker documentation:) where specific ordering is desired - 
     ;;	the first linker input file should have the area definitions 
     ;;	in the desired order
