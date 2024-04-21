@@ -11,3 +11,12 @@
 /HW/Project Logs for Z80BD
 /CPLD/src/z80db_tb.vcd
 /Z80sdcc/build
+/ZXCOMPORT/CPLD/incremental_db
+/ZXCOMPORT/CPLD/db
+/ZXCOMPORT/CPLD/build
+/ZXCOMPORT/CPLD/src/z80db.v.bak
+/ZXCOMPORT/CPLD/src/z80db_tb.vcd
+/ZXCOMPORT/HW/History
+/ZXCOMPORT/HW/src/__Previews
+/ZXCOMPORT/HW/Project Logs for comport
+/ZXCOMPORT/HW/*.log

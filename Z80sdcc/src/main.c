@@ -12,6 +12,7 @@ char GetMagicNumber() __naked;
 void cls(void) __naked;
 void print(char x, char y, char* text) __naked;
 int get_screen_adr(char x, char y) __naked;
+void uart_print(char * text);
 
 char *screen = 0x4000;
 char w = 0;
@@ -19,20 +20,33 @@ char i = 0;
 char key[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 static volatile char irq_0x38_flag = 0;
 static volatile char nmi_0x66_flag = 0;
+char msg[] = "Hello world!!!\r\n";
+
 
 void main() {
+    port_0x7ffd = 0x00;
     init_screen();
-    print(10, 10, "Hello world!!!");
+    print(10, 10, msg);
+    port_0xfffd = 0x07;
+    port_0xbffd = 0x38;
+    port_0xfffd = 0x08;
+    port_0xbffd = 0x0a;
+
+    port_0xfbef = 128;
+    port_0xf8ef = 6;
+    port_0xf9ef = 0;
+    port_0xfbef = 3;
+
     while(1) {
         *(screen + 4) = key[0];
         *(screen + 6) = key[1];
-
-        *(screen + 8) = GetMagicNumber();
 
         if(irq_0x38_flag) {
             irq_0x38_flag = 0;
             //if(!(i%129)) port_0x00fe = w++;
             *(screen + 0) = i++;
+            port_0xfffd = 0x00;
+            port_0xbffd = i;
         }
 
         if(nmi_0x66_flag) {
@@ -40,8 +54,29 @@ void main() {
             char tmp = *(screen + 2);
             *(screen + 2) = tmp + 1;
         }
+        
+        *(screen + 7) = port_0xf8ef;
+        *(screen + 9) = port_0xfdef;
+        *(screen + 8) = port_0xfeef;
+        //port_0xf8ef = 0x55;
+        uart_print(msg);
+    }
+}
 
-        //*(char*)(get_screen_adr(9, 9)) = 0x55;
+void delay(unsigned int t);
+void delay(unsigned int t) {
+    for(char j = 0; j!=t; j++) {
+        __asm
+        nop
+        __endasm;
+    }
+}
+
+void uart_print(char * text) {
+    char ii = 0;
+    while(*(text+ii)!=0) {
+        port_0xf8ef = *(text+ii++);
+        delay(10);
     }
 }
 
@@ -84,9 +119,9 @@ int get_screen_adr(char x, char y) __naked {
 
 void print(char x, char y, char* text) __naked {
     __asm
-    ld iy,#2
-    add iy,sp
-    ld d, (iy)   ;x
+    ld iy, #2
+    add iy, sp
+    ld d, 0(iy)   ;x
     ld e, 1(iy)   ;y
     ld l, 2(iy)
     ld h, 3(iy)
