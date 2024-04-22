@@ -27,12 +27,14 @@ void main() {
     port_0x7ffd = 0x00;
     init_screen();
     print(10, 10, msg);
+
+    // PSG init
     port_0xfffd = 0x07;
     port_0xbffd = 0x38;
     port_0xfffd = 0x08;
     port_0xbffd = 0x0a;
 
-
+    // 16c550 init
     port_0xfcef = 0x0d; // Assert RTS
     port_0xfaef = 0x87; // Enable fifo 8 level, and clear it
     port_0xfbef = 0x83; // 8n1, DLAB=1
@@ -41,7 +43,6 @@ void main() {
     port_0xfbef = 0x03; // 8n1, DLAB=0
     port_0xf9ef = 0x00; // Disable int
     port_0xfcef = 0x2f; // Enable AFE
-
 
     // port_0xfbef = 128;
     // port_0xf8ef = 1;

@@ -37,15 +37,13 @@
 
 
 set_global_assignment -name FAMILY MAX3000A
-set_global_assignment -name DEVICE "EPM3064ALC44-10"
+set_global_assignment -name DEVICE "EPM3032ALC44-10"
 set_global_assignment -name TOP_LEVEL_ENTITY z80io
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION "13.0 SP1"
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "15:18:56  MARCH 13, 2024"
 set_global_assignment -name LAST_QUARTUS_VERSION "13.0 SP1"
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY build
 set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR "-1"
-set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
-set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
 set_global_assignment -name TIMEQUEST_MULTICORNER_ANALYSIS OFF
 set_global_assignment -name VERILOG_FILE src/z80db.v
 set_global_assignment -name MAX7000_DEVICE_IO_STANDARD "3.3-V LVTTL"
@@ -79,3 +77,6 @@ set_location_assignment PIN_8 -to RTS_3V
 set_location_assignment PIN_18 -to RTS_5V
 set_location_assignment PIN_21 -to SOUT_5V
 set_location_assignment PIN_40 -to TX_3V
+set_global_assignment -name OPTIMIZE_HOLD_TIMING OFF
+set_global_assignment -name OPTIMIZE_MULTI_CORNER_TIMING OFF
+set_global_assignment -name FITTER_EFFORT "STANDARD FIT"
