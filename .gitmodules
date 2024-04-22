@@ -4,6 +4,3 @@
 [submodule "Z80PrlProg"]
 	path = Z80PrlProg
 	url = https://github.com/MikhaelKaa/Z80PrlProg.git
-[submodule "ZXCOMPORT/HW/altium_libs/altium_libs"]
-	path = ZXCOMPORT/HW/altium_libs/altium_libs
-	url = https://github.com/MikhaelKaa/altium_libs.git

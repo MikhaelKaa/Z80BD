@@ -14,8 +14,17 @@ inout [7:0]D,
 output tl_cs,	// rdrom aka rdr. 
 output ioge, 
 // Джампер управления.
-input jump
+input jump,
+
+input RTS_5V,
+output RTS_3V,
+input SOUT_5V,
+output TX_3V
+
 );
+
+assign RTS_3V = RTS_5V;
+assign TX_3V  = SOUT_5V;
 
 reg ioge_filt = 1'b0;
 always @(negedge clk) begin

@@ -75,3 +75,7 @@ set_global_assignment -name SMART_RECOMPILE ON
 set_location_assignment PIN_11 -to tl_cs
 set_location_assignment PIN_9 -to ioge
 set_location_assignment PIN_43 -to clk
+set_location_assignment PIN_8 -to RTS_3V
+set_location_assignment PIN_18 -to RTS_5V
+set_location_assignment PIN_21 -to SOUT_5V
+set_location_assignment PIN_40 -to TX_3V

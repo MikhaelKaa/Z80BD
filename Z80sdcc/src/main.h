@@ -43,23 +43,21 @@ __sfr __banked __at(0xfffd) port_0xfffd;
 // Порт регистр данных AY-3-8910.
 __sfr __banked __at(0xbffd) port_0xbffd;
 
-// Порт reg 0. регистр данных TL16C550.
+// Порт reg 0. RBR_THR регистр данных TL16C550.
 __sfr __banked __at(0xf8ef) port_0xf8ef;
-// Порт reg 1 TL16C550.
+// Порт reg 1. IER TL16C550.
 __sfr __banked __at(0xf9ef) port_0xf9ef;
-// Порт reg 2 TL16C550.
+// Порт reg 2. IIR_FCR TL16C550.
 __sfr __banked __at(0xfaef) port_0xfaef;
-// Порт reg 3 TL16C550.
+// Порт reg 3. LCR TL16C550.
 __sfr __banked __at(0xfbef) port_0xfbef;
-// Порт reg 4 TL16C550.
+// Порт reg 4. MCR TL16C550.
 __sfr __banked __at(0xfcef) port_0xfcef;
-// Порт reg 5 TL16C550.
+// Порт reg 5. LSR TL16C550.
 __sfr __banked __at(0xfdef) port_0xfdef;
-// Порт reg 6 TL16C550.
+// Порт reg 6. MSR TL16C550.
 __sfr __banked __at(0xfeef) port_0xfeef;
-// Порт reg 7 TL16C550.
+// Порт reg 7. SR TL16C550.
 __sfr __banked __at(0xffef) port_0xffef;
-
-
 
 #endif /* __MAIN__ */

@@ -32,10 +32,21 @@ void main() {
     port_0xfffd = 0x08;
     port_0xbffd = 0x0a;
 
-    port_0xfbef = 128;
-    port_0xf8ef = 6;
-    port_0xf9ef = 0;
-    port_0xfbef = 3;
+
+    port_0xfcef = 0x0d; // Assert RTS
+    port_0xfaef = 0x87; // Enable fifo 8 level, and clear it
+    port_0xfbef = 0x83; // 8n1, DLAB=1
+    port_0xf8ef = 0x01; // 115200 (divider 1)
+    port_0xf9ef = 0x00; // (divider 0). Divider is 16 bit, so we get (0x0001 divider)
+    port_0xfbef = 0x03; // 8n1, DLAB=0
+    port_0xf9ef = 0x00; // Disable int
+    port_0xfcef = 0x2f; // Enable AFE
+
+
+    // port_0xfbef = 128;
+    // port_0xf8ef = 1;
+    // port_0xf9ef = 0;
+    // port_0xfbef = 3;
 
     while(1) {
         *(screen + 4) = key[0];
