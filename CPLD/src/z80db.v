@@ -39,7 +39,7 @@ assign mce = bsrq?(cash_is_act_mreq):(cash_mreq);  // mreq
 assign ma14 = reg_7ffd[4];
 
 // Блокировка штатного ПЗУ.
-assign romblk = source | ~bsrq;
+assign romblk = ~(source | ~bsrq);
 
 wire source = cash ^ jump;
 

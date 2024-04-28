@@ -29,8 +29,8 @@ begin:
 start:
     
     ; Устанавливаем дно стека.
-    ld sp, 16383 
-    ei
+    ld sp, 16300 
+    ;ei
 
     call cls
     call green_paper
@@ -38,7 +38,27 @@ start:
     ld de, 0x0000
     call print_string
 
+    ld  hl, target
+    ld  de, 0x7000
+    ld  bc, target_end-target
+    ldir
+
+    ld  hl, gamecode
+    ld  de, 32768
+    ld  bc, gamecode_end-gamecode
+    ldir
+
+    ;in a, (0x7b) ; выключить cash
+    
+
+    ;ld sp, 65535 
+    ;jp 0x7000
+    ; ld  hl, (23773 + 9)
+    ; jp  (hl)
+    ei
+    
 main_loop:
+
     ld a, 0b0000001
     ld bc, 0x7ffd
     out (c), a
@@ -130,7 +150,15 @@ delay:
 
     include "src/print.asm"
 
+target:
+    incbin "target.bin"
+target_end:
+gamecode:
+    incbin "game_CODE.bin"
+gamecode_end:
+
 end:
     ; Выводим размер банарника.
+    display "target size: ", /d, target_end - target
     display "code size: ", /d, end - begin
     SAVEBIN "build/out.bin", begin, 16384;  размер бинарного файла для прошивки ПЗУ\ОЗУ

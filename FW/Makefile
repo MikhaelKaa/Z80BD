@@ -1,5 +1,6 @@
 
 build:
+	sjasmplus --syntax=af --dirbol --fullpath target.asm --raw=target.bin
 	sjasmplus src/main.asm --syntax=F --inc="src"
 
 flash:
