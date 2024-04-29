@@ -1,22 +1,10 @@
 // 15.04.2024 Михаил Каа
-
 #ifndef __MAIN__
 #define __MAIN__
 
-#if !defined(__SDCC_z80)
-    #define __data
-    #define __code
-    #define __sfr volatile unsigned char
-    #define __critical
-    #define __banked
-    #define __at(x)
-    #define __using(x)
-    #define __interrupt(x)
-    #define __naked
-    #define __asm
-    #define __endasm
-    #define ds
-#endif
+#include "defines.h"
+
+void print(char x, char y, char* text) __naked;
 
 // Полуряд Space...B.
 __sfr __banked __at(0x7ffe) port_0x7ffe;
@@ -43,21 +31,6 @@ __sfr __banked __at(0xfffd) port_0xfffd;
 // Порт регистр данных AY-3-8910.
 __sfr __banked __at(0xbffd) port_0xbffd;
 
-// Порт reg 0. RBR_THR регистр данных TL16C550.
-__sfr __banked __at(0xf8ef) port_0xf8ef;
-// Порт reg 1. IER TL16C550.
-__sfr __banked __at(0xf9ef) port_0xf9ef;
-// Порт reg 2. IIR_FCR TL16C550.
-__sfr __banked __at(0xfaef) port_0xfaef;
-// Порт reg 3. LCR TL16C550.
-__sfr __banked __at(0xfbef) port_0xfbef;
-// Порт reg 4. MCR TL16C550.
-__sfr __banked __at(0xfcef) port_0xfcef;
-// Порт reg 5. LSR TL16C550.
-__sfr __banked __at(0xfdef) port_0xfdef;
-// Порт reg 6. MSR TL16C550.
-__sfr __banked __at(0xfeef) port_0xfeef;
-// Порт reg 7. SR TL16C550.
-__sfr __banked __at(0xffef) port_0xffef;
+
 
 #endif /* __MAIN__ */

@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "main.h": "c",
+        "tl16c550.h": "c"
+    }
+}

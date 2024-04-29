@@ -1,31 +1,32 @@
 module z80io(
 // CPU
-input reset,
-input clk,
-input bsrq,
-input mreq,
+input reset,// TODO: del
+input clk,// TODO: del
+input bsrq,// TODO: del
+input mreq,// TODO: del
 input iorq,
-input rd,
-input wr,
+input rd,// TODO: del
+input wr,// TODO: del
 input [7:0]A,
-inout [7:0]D,
+inout [7:0]D,// TODO: del
 
-// Блокировка штатного ПЗУ.
-output tl_cs,	// rdrom aka rdr. 
+// Chip select 16550.
+output tl_cs,	
 output ioge, 
 // Джампер управления.
-input jump,
+input jump,// TODO: del
 
 input RTS_5V,
 output RTS_3V,
-input SOUT_5V,
+input TX_5V,
 output TX_3V
 
 );
 
 assign RTS_3V = RTS_5V;
-assign TX_3V  = SOUT_5V;
+assign TX_3V  = TX_5V;
 
+// TODO: del
 reg ioge_filt = 1'b0;
 always @(negedge clk) begin
 	ioge_filt = ioge_c;

@@ -35,15 +35,24 @@ all:
 
 	# Compile main.c
 	$(CC) -o $(BUILD_DIR)/$(TARGET).rel -c $(CFLAGS) $(SRC_DIR)/main.c
-		
+	# Compile print.c
+	$(CC) -o $(BUILD_DIR)/print.rel -c $(CFLAGS) $(SRC_DIR)/print.c
+	# Compile tl16c550.c
+	$(CC) -o $(BUILD_DIR)/tl16c550.rel -c $(CFLAGS) $(SRC_DIR)/tl16c550.c
+	
 	# Link both
 	$(CC) -o $(BUILD_DIR)/main.ihx \
 		-mz80 -Wl -y --code-loc $(CODE_LOCATION) --data-loc $(DATA_LOCATION) \
 		--std-c11 -mz80 --debug --no-std-crt0 --nostdinc --nostdlib \
-		-Llib -llibsdcc-z80  $(BUILD_DIR)/crt0.rel $(BUILD_DIR)/main.rel
+		-Llib -llibsdcc-z80  \
+		$(BUILD_DIR)/crt0.rel \
+		$(BUILD_DIR)/tl16c550.rel \
+		$(BUILD_DIR)/print.rel \
+		$(BUILD_DIR)/main.rel
 	
 	# Finally, convert ihx to binary
 	sdobjcopy -I ihex -O binary $(BUILD_DIR)/main.ihx $(BUILD_DIR)/main.bin
+	# compile done
 	
 .PHONY: clean
 clean:

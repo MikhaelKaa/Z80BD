@@ -75,8 +75,8 @@ set_location_assignment PIN_9 -to ioge
 set_location_assignment PIN_43 -to clk
 set_location_assignment PIN_8 -to RTS_3V
 set_location_assignment PIN_18 -to RTS_5V
-set_location_assignment PIN_21 -to SOUT_5V
 set_location_assignment PIN_40 -to TX_3V
 set_global_assignment -name OPTIMIZE_HOLD_TIMING OFF
 set_global_assignment -name OPTIMIZE_MULTI_CORNER_TIMING OFF
 set_global_assignment -name FITTER_EFFORT "STANDARD FIT"
+set_location_assignment PIN_21 -to TX_5V
