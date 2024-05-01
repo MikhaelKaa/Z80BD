@@ -188,7 +188,7 @@ ClassGenCCAutoRoomEnabled=1
 ClassGenNCAutoScope=None
 DItemRevisionGUID=
 GenerateClassCluster=0
-DocumentUniqueId=
+DocumentUniqueId=LWXGCUCJ
 
 [Document10]
 DocumentPath=..\..\HW\altium_libs\cpld.PcbLib
