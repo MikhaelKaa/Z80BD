@@ -48,9 +48,9 @@ void main() {
             *(screen + 2) = i;
         }
 
-        char tmp[] = "0";
-        tmp[0] = uart_get();
-        if(tmp[0]!=0) {
+        char tmp[] = " ";
+        //uart_get(&tmp);
+        if(uart_get(&tmp[0]) == 0) {
             uart_print(tmp);
             print(0, 1, tmp);
         } 

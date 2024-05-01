@@ -10,8 +10,12 @@ void delay(unsigned int t) {
     }
 }
 
-char uart_get(void) {
-    return port_0xf8ef;
+char uart_get(char* data) {
+    if(port_0xfdef & 1) {
+        *data = port_0xf8ef;
+        return 0;
+    }
+    return -1;
 }
 
 // tl16c550 init.
