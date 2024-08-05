@@ -7,6 +7,7 @@ void uart_init(void);
 void uart_print(char* text);
 char uart_get(char* data);
 
+void delay(unsigned int t);
 
 // Порт reg 0. RBR_THR регистр данных TL16C550.
 __sfr __banked __at(0xf8ef) port_0xf8ef;
