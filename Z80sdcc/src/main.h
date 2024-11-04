@@ -31,6 +31,9 @@ __sfr __banked __at(0xfffd) port_0xfffd;
 // Порт регистр данных AY-3-8910.
 __sfr __banked __at(0xbffd) port_0xbffd;
 
+// Порт 0xeff7.
+__sfr __banked __at(0xeff7) port_0xeff7;
+
 
 
 #endif /* __MAIN__ */

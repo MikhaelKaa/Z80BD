@@ -1,9 +1,8 @@
 
 #include "tl16c550.h"
 
-void delay(unsigned int t);
 void delay(unsigned int t) {
-    for(char j = 0; j != t; j++) {
+    for(unsigned int j = 0; j != t; j++) {
         __asm
         nop
         __endasm;
