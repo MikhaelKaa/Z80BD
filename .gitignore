@@ -21,3 +21,7 @@
 /ZXCOMPORT/HW/Project Logs for comport
 /ZXCOMPORT/HW/*.log
 /HW/src/*.log
+/HW_prot0/debug.log
+/HW_prot0/History
+/HW_prot0/src/__Previews
+/HW_prot0/Project Logs for epm3128/*.LOG
