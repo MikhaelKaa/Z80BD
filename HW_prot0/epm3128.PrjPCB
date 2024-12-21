@@ -460,7 +460,7 @@ ClassGenCCAutoRoomEnabled=1
 ClassGenNCAutoScope=None
 DItemRevisionGUID=
 GenerateClassCluster=0
-DocumentUniqueId=
+DocumentUniqueId=KVVSAKXA
 
 [Document26]
 DocumentPath=..\HW\altium_libs\QFP.PcbLib
