@@ -36,3 +36,4 @@
 /CPLD_prot0/db
 /CPLD_prot0/build
 /CPLD_prot0/z80bd_description.txt
+/CPLD_prot0/src/z80bd_tb.vcd
