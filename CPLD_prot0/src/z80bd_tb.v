@@ -80,13 +80,12 @@ z80bd dut(
   .U_INT(U_INT)
 );
 
+assign D = (D_is_out) ? D_out : 8'bZ;
 
 // Сигнал тактовой частоты.
 always begin
   #CLK_CONST CLK_24MHz = ~CLK_24MHz;  
 end
-
-assign D = (D_is_out) ? D_out : 8'bZ;
 
 initial begin
   $dumpfile("z80bd_tb.vcd");
@@ -98,7 +97,7 @@ initial begin
   IORQ = 1;
 
   #200
-  // page0 port test
+  // page0 pert test
   $display("page0 port 0x10");
   A = 16'h0010;
   D_out = 8'h11;
@@ -114,11 +113,13 @@ initial begin
   IORQ = 1;
   D_out = 8'h00;
   
+  
+  
   #200
-  // page1 port test
+  // page0 pert test
   $display("page1 port 0x11");
   A = 16'h0011;
-  D_out = 8'h01;
+  D_out = 8'h11;
   #200
   WR = 0; //<----
   RD = 1; 
