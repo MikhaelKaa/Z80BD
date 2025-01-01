@@ -35,7 +35,6 @@ module z80bd (
     output U_CS,
     output U_CLK,
     input  U_INT
-    
 );
 
 
@@ -43,7 +42,14 @@ module z80bd (
 parameter mem_window_0_port =   8'h10;
 parameter mem_window_1_port =   8'h11;
 parameter mem_window_2_port =   8'h12;
-parameter mem_window_3_port =   8'h13;
+parameter mem_window_3_port =   8'h14;
+
+parameter system_port       =   8'h20;
+// bit 2 - 24 MHz
+// bit 1:0 - 12, 6, 3, 1.5 MHz
+
+parameter uart_16550_port   =   8'hef;
+
 
 // PIN mapping (PIN naming as sch)
 wire [15:0] cpu_address = A;
@@ -82,15 +88,27 @@ reg [3:0] cpu_clk_div = 4'h0;
 always @(negedge CLK_24MHz) begin
     cpu_clk_div = cpu_clk_div + 1;
 end
-assign cpu_clock = cpu_clk_div[3];
+assign cpu_clock = system_reg[2]? CLK_24MHz : (cpu_clk_div[~system_reg[1:0]]);
+
+// System register wr & rd.
+reg [7:0] system_reg = 8'h00;
+always @(negedge iowr_n or negedge reset_n) begin
+    if(!reset_n) begin
+        system_reg <= 8'h00;
+    end else begin
+        if(cpu_address_l == system_port ) system_reg <= D;
+    end
+end
+wire system_rd = (~(cpu_address_l == system_port)) | iord_n;
+assign D = (system_rd)?(8'hzz):(system_reg);
 
 // Memory mapper
 wire [1:0] cpu_adr_page = cpu_address[15:14];
-reg [7:0] mmap_window_0 = 8'h0;
-reg [7:0] mmap_window_1 = 8'h0;
-reg [7:0] mmap_window_2 = 8'h0;
-reg [7:0] mmap_window_3 = 8'h0;
-reg [7:0] mmap_outp     = 8'h0;
+reg [7:0] mmap_window_0 = 8'h00;
+reg [7:0] mmap_window_1 = 8'h00;
+reg [7:0] mmap_window_2 = 8'h00;
+reg [7:0] mmap_window_3 = 8'h00;
+reg [7:0] mmap_outp     = 8'h00;
 
 // Write memory map registers.
 always @(negedge iowr_n or negedge reset_n) begin
@@ -135,21 +153,22 @@ assign fast_ram1_ce_n = ~mmap_outp[6] ? 1'b1 : ~mmap_outp[1];
 
 // 16550
 // Clock 16550
-reg [3:0] uart_clk_cnt = 4'h0;
-reg uart_clk = 1'b0;
-always @(negedge CLK_24MHz) begin
-    if(uart_clk_cnt > 6) begin
-        uart_clk_cnt <= 4'h0;
-        uart_clk = ~uart_clk;
-    end else begin
-        uart_clk_cnt <= uart_clk_cnt + 1;
-    end
-end
+// reg [3:0] uart_clk_cnt = 4'h0;
+// reg uart_clk = 1'b0;
+// always @(negedge CLK_24MHz) begin
+//     if(uart_clk_cnt > 6) begin
+//         uart_clk_cnt <= 4'h0;
+//         uart_clk = ~uart_clk;
+//     end else begin
+//         uart_clk_cnt <= uart_clk_cnt + 1;
+//     end
+// end
 //  1.8432 MHz --> 542.53472 ns
 // 24.0000 MHz -->  41.66667 ns
 // Похоже проще поставить кварц на 16550...
-assign U_CLK = uart_clk;
+// assign U_CLK = uart_clk;
 
+assign U_CS = iorq_n | ~(cpu_address_l == uart_16550_port);
 
 endmodule
 

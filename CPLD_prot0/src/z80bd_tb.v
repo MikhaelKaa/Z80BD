@@ -154,7 +154,7 @@ initial begin
   #200
   // window3 port test
   $display("window_3 port write 0x42");
-  A = 16'h0013;
+  A = 16'h0014;
   D_out = 8'h42;
   #200
   WR = 0; //<----
@@ -198,6 +198,85 @@ initial begin
   A = 16'hc011;
 
 
+  #2000
+  D_is_out = 1'b1;
+  // window3 port test
+  $display("system port write 0x00");
+  A     = 16'h0020;
+  D_out =    8'h00;
+  #200
+  WR = 0;
+  RD = 1; 
+  IORQ = 0;
+  #200
+  WR = 1; 
+  RD = 1; 
+  A = 16'h0000;
+  IORQ = 1;
+
+  #500
+  D_is_out = 1'b1;
+  // window3 port test
+  $display("system port write 0x01");
+  A     = 16'h0020;
+  D_out =    8'h01;
+  #200
+  WR = 0;
+  RD = 1; 
+  IORQ = 0;
+  #200
+  WR = 1; 
+  RD = 1; 
+  A = 16'h0000;
+  IORQ = 1;
+
+  #500
+  D_is_out = 1'b1;
+  // window3 port test
+  $display("system port write 0x02");
+  A     = 16'h0020;
+  D_out =    8'h02;
+  #200
+  WR = 0;
+  RD = 1; 
+  IORQ = 0;
+  #200
+  WR = 1; 
+  RD = 1; 
+  A = 16'h0000;
+  IORQ = 1;
+
+  #500
+  D_is_out = 1'b1;
+  // system port test
+  $display("system port write 0x03");
+  A     = 16'h0020;
+  D_out =    8'h03;
+  #200
+  WR = 0;
+  RD = 1; 
+  IORQ = 0;
+  #200
+  WR = 1; 
+  RD = 1; 
+  A = 16'h0000;
+  IORQ = 1;
+
+  #500
+  D_is_out = 1'b1;
+  // system port test
+  $display("system port write 0x04");
+  A     = 16'h0020;
+  D_out =    8'h04;
+  #200
+  WR = 0;
+  RD = 1; 
+  IORQ = 0;
+  #200
+  WR = 1; 
+  RD = 1; 
+  A = 16'h0000;
+  IORQ = 1;
 
   D_is_out = 1'b0;
   #1000000
