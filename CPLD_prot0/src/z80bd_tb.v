@@ -20,7 +20,7 @@ reg WR      = 1'b0;
 
 reg [15:0]A  = 16'b0;
 
-wire [7:0]D  = 8'b0;
+wire [7:0]D;
 reg [7:0]D_in  = 8'b0; 
 reg [7:0]D_out  = 8'b0; 
 reg D_is_out  = 1'b1; 
@@ -86,7 +86,7 @@ always begin
   #CLK_CONST CLK_24MHz = ~CLK_24MHz;  
 end
 
-assign D = (D_is_out) ? D_out : 8'bZ;
+assign D = (D_is_out) ? D_out : 8'hzz;
 
 initial begin
   $dumpfile("z80bd_tb.vcd");
@@ -96,12 +96,13 @@ initial begin
   RD = 1; 
   A = 16'h0000;
   IORQ = 1;
+  RES = 1'b1;
 
   #200
-  // page0 pert test
-  $display("page0 port 0x10");
-  A = 16'h0010;
-  D_out <= 8'h01;
+  // window_0 port test
+  $display("window_0 port write 0x00");
+  A = 16'h0010; //TODO:  parameter mem_window_0_port =   8'h10;
+  D_out = 8'h00;
   #200
   WR = 0; //<----
   RD = 1; 
@@ -110,28 +111,42 @@ initial begin
   //if(M_A14 != 1'b1) $display("M_A14 is 1'b1");
   WR = 1; //<----
   RD = 1; 
-  A = 16'h0000;
+  A = 16'h0001;
   IORQ = 1;
   D_out = 8'h00;
   
   
   
   #200
-  // page0 pert test
-  $display("page1 port 0x11");
+  // window1 port test
+  $display("window_1 port write 0x21");
   A = 16'h0011;
-  D_out = 8'h11;
+  D_out = 8'h21;
   #200
   WR = 0; //<----
   RD = 1; 
   IORQ = 0;
   #200
-  //if(M_A14 != 1'b1) $display("M_A14 is 1'b1");
   WR = 1; //<----
   RD = 1; 
-  A = 16'h0000;
+  A = 16'h4001;
   IORQ = 1;
-  D_out = 8'h22;
+
+  #200
+  // 
+  $display("window_1 port read");
+  A = 16'h0011;
+  D_is_out = 1'b0;
+  #200
+  WR = 1; //<----
+  RD = 0; 
+  IORQ = 0;
+  #200
+  WR = 1; //<----
+  RD = 1; 
+  A = 16'h4001;
+  IORQ = 1;
+
   
 
 
