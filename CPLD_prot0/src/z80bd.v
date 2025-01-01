@@ -46,11 +46,10 @@ wire [7:0] cpu_address_h = cpu_address[15:8];
 wire [4:0] ext_mem_adr;
 assign {M_A18, M_A17, M_A16, M_A15, M_A14} = ext_mem_adr;
 
-wire [7:0] cpu_data = D;
+//wire [7:0] cpu_data = D;
 
 wire cpu_clock;
 assign CLK = cpu_clock;
-
 
 wire slow_rom_ce_n;
 assign ROM_CE = slow_rom_ce_n;
@@ -86,10 +85,10 @@ reg [7:0] mmap_page3 = 8'h0;
 reg [7:0] mmap_outp  = 8'h0;
 
 always @(negedge iowr_n) begin
-    if(cpu_address_l == 8'h10 ) mmap_page0 <= cpu_data;
-    if(cpu_address_l == 8'h11 ) mmap_page1 <= cpu_data;
-    if(cpu_address_l == 8'h12 ) mmap_page2 <= cpu_data;
-    if(cpu_address_l == 8'h13 ) mmap_page3 <= cpu_data;
+    if(cpu_address_l == 8'h10 ) mmap_page0 <= D;
+    if(cpu_address_l == 8'h11 ) mmap_page1 <= D;
+    if(cpu_address_l == 8'h12 ) mmap_page2 <= D;
+    if(cpu_address_l == 8'h13 ) mmap_page3 <= D;
 end
 
 //always @(*) begin  // TODO: Изучить как это работает.
@@ -105,6 +104,8 @@ assign slow_rom_ce_n  =  mmap_outp[6] ? 1'b1 :  mmap_outp[5];
 assign slow_ram_ce_n  =  mmap_outp[6] ? 1'b1 : ~mmap_outp[5];
 assign fast_ram0_ce_n = ~mmap_outp[6] ? 1'b1 :  mmap_outp[1];
 assign fast_ram1_ce_n = ~mmap_outp[6] ? 1'b1 : ~mmap_outp[1];
+
+assign D = 8'bZ;
 
 endmodule
 

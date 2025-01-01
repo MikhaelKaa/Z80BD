@@ -1,8 +1,9 @@
 `timescale 1 ns / 10 ps
+`default_nettype wire
 
 module z80bd_tb;
 
-localparam CLK_CONST =      4;  
+localparam CLK_CONST =      2.084;  
 
 /* DUT inputs */
 
@@ -22,7 +23,7 @@ reg [15:0]A  = 16'b0;
 wire [7:0]D  = 8'b0;
 reg [7:0]D_in  = 8'b0; 
 reg [7:0]D_out  = 8'b0; 
-reg D_is_out  = 1'b0; 
+reg D_is_out  = 1'b1; 
 
 // 16550
 reg U_INT;
@@ -80,12 +81,12 @@ z80bd dut(
   .U_INT(U_INT)
 );
 
-assign D = (D_is_out) ? D_out : 8'bZ;
-
 // Сигнал тактовой частоты.
 always begin
   #CLK_CONST CLK_24MHz = ~CLK_24MHz;  
 end
+
+assign D = (D_is_out) ? D_out : 8'bZ;
 
 initial begin
   $dumpfile("z80bd_tb.vcd");
@@ -100,7 +101,7 @@ initial begin
   // page0 pert test
   $display("page0 port 0x10");
   A = 16'h0010;
-  D_out = 8'h11;
+  D_out <= 8'h01;
   #200
   WR = 0; //<----
   RD = 1; 
@@ -130,7 +131,7 @@ initial begin
   RD = 1; 
   A = 16'h0000;
   IORQ = 1;
-  D_out = 8'h00;
+  D_out = 8'h22;
   
 
 
