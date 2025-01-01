@@ -3,7 +3,7 @@
 
 module z80bd_tb;
 
-localparam CLK_CONST =      2.084;  
+localparam CLK_CONST =      20.83;  // 24 MHz (41.66667 ns)
 
 /* DUT inputs */
 
@@ -131,6 +131,40 @@ initial begin
   RD = 1; 
   A = 16'h4001;
   IORQ = 1;
+  
+  
+  
+  #200
+  // window2 port test
+  $display("window_2 port write 0x40");
+  A = 16'h0012;
+  D_out = 8'h40;
+  #200
+  WR = 0; //<----
+  RD = 1; 
+  IORQ = 0;
+  #200
+  WR = 1; //<----
+  RD = 1; 
+  A = 16'h4001;
+  IORQ = 1;
+  
+  
+  
+  #200
+  // window3 port test
+  $display("window_3 port write 0x42");
+  A = 16'h0013;
+  D_out = 8'h42;
+  #200
+  WR = 0; //<----
+  RD = 1; 
+  IORQ = 0;
+  #200
+  WR = 1; //<----
+  RD = 1; 
+  A = 16'h4001;
+  IORQ = 1;
 
   #200
   // 
@@ -147,7 +181,21 @@ initial begin
   A = 16'h4001;
   IORQ = 1;
 
-  
+  #400
+  $display("address set window 0");
+  A = 16'h0011;
+
+  #400
+  $display("address set window 1");
+  A = 16'h4011;
+
+  #400
+  $display("address set window 2");
+  A = 16'h8011;
+
+  #400
+  $display("address set window 3");
+  A = 16'hc011;
 
 
 

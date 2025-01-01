@@ -38,6 +38,7 @@ module z80bd (
     
 );
 
+
 // 
 parameter mem_window_0_port =   8'h10;
 parameter mem_window_1_port =   8'h11;
@@ -89,7 +90,7 @@ reg [7:0] mmap_window_0 = 8'h0;
 reg [7:0] mmap_window_1 = 8'h0;
 reg [7:0] mmap_window_2 = 8'h0;
 reg [7:0] mmap_window_3 = 8'h0;
-reg [7:0] mmap_outp  = 8'h0;
+reg [7:0] mmap_outp     = 8'h0;
 
 // Write memory map registers.
 always @(negedge iowr_n or negedge reset_n) begin
@@ -117,8 +118,8 @@ assign D = (window_1_rd)?(8'hzz):(mmap_window_1);
 assign D = (window_2_rd)?(8'hzz):(mmap_window_2);
 assign D = (window_3_rd)?(8'hzz):(mmap_window_3);
 
-//always @(*) begin  // TODO: Изучить как это работает.
-always @(negedge CLK_24MHz) begin  
+always @(*) begin  // TODO: Изучить как это работает.
+//always @(negedge CLK_24MHz) begin  
     if(cpu_adr_page == 0) mmap_outp <= mmap_window_0;
     if(cpu_adr_page == 1) mmap_outp <= mmap_window_1;
     if(cpu_adr_page == 2) mmap_outp <= mmap_window_2;
@@ -130,6 +131,25 @@ assign slow_rom_ce_n  =  mmap_outp[6] ? 1'b1 :  mmap_outp[5];
 assign slow_ram_ce_n  =  mmap_outp[6] ? 1'b1 : ~mmap_outp[5];
 assign fast_ram0_ce_n = ~mmap_outp[6] ? 1'b1 :  mmap_outp[1];
 assign fast_ram1_ce_n = ~mmap_outp[6] ? 1'b1 : ~mmap_outp[1];
+
+
+// 16550
+// Clock 16550
+reg [3:0] uart_clk_cnt = 4'h0;
+reg uart_clk = 1'b0;
+always @(negedge CLK_24MHz) begin
+    if(uart_clk_cnt > 6) begin
+        uart_clk_cnt <= 4'h0;
+        uart_clk = ~uart_clk;
+    end else begin
+        uart_clk_cnt <= uart_clk_cnt + 1;
+    end
+end
+//  1.8432 MHz --> 542.53472 ns
+// 24.0000 MHz -->  41.66667 ns
+// Похоже проще поставить кварц на 16550...
+assign U_CLK = uart_clk;
+
 
 endmodule
 
