@@ -79,6 +79,10 @@ wire iorq_n = IORQ;
 wire wr_n = WR;
 wire rd_n = RD;
 
+assign INT = 1'b1;
+assign NMI = 1'b1;
+
+
 // Base io
 wire iowr_n = iorq_n | wr_n;
 wire iord_n = iorq_n | rd_n;
