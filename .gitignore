@@ -38,3 +38,20 @@
 /CPLD_prot0/z80bd_description.txt
 /CPLD_prot0/src/z80bd_tb.vcd
 /CPLD_prot0/z80bd.qws
+/Proto_on_slot/HW/debug.log
+/Proto_on_slot/HW/src/__Previews
+/Proto_on_slot/HW/History
+/Proto_on_slot/HW/Project Logs for epm3128
+/Proto_on_socket/CPLD/z80db.qws
+/Proto_on_socket/CPLD/build
+/Proto_on_socket/CPLD/db
+/Proto_on_socket/CPLD/incremental_db
+/Proto_on_slot/CPLD/build
+/Proto_on_slot/CPLD/db
+/Proto_on_slot/CPLD/incremental_db
+/Proto_on_slot/CPLD/z80bd_description.txt
+/Proto_on_slot/CPLD/z80bd.qws
+/Proto_on_slot/CPLD/src/z80bd.v.bak
+/Proto_on_slot/CPLD/src/*.vcd
+/Proto_on_socket/HW/History/*.Zip
+/Proto_on_socket/HW/src/*.log
