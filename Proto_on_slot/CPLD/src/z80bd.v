@@ -66,6 +66,7 @@ assign CLK = cpu_clock;
 
 wire reset_n = RES;
 
+wire mreq_n = MREQ;
 wire slow_rom_ce_n;
 assign ROM_CE = slow_rom_ce_n;
 wire slow_ram_ce_n;
@@ -107,19 +108,19 @@ wire system_rd = (~(cpu_address_l == system_port)) | iord_n;
 assign D = (system_rd)?(8'hzz):(system_reg);
 
 // Memory mapper
-wire [1:0] cpu_adr_page = cpu_address[15:14];
-reg [7:0] mmap_window_0 = 8'h00;
-reg [7:0] mmap_window_1 = 8'h00;
-reg [7:0] mmap_window_2 = 8'h00;
-reg [7:0] mmap_window_3 = 8'h00;
+wire [1:0] cpu_adr_window = cpu_address[15:14];
+reg [7:0] mmap_window_0 = 8'h40;
+reg [7:0] mmap_window_1 = 8'h40;
+reg [7:0] mmap_window_2 = 8'h40;
+reg [7:0] mmap_window_3 = 8'h40;
 reg [7:0] mmap_outp     = 8'h00;
 
 // Write memory map registers.
 always @(negedge iowr_n or negedge reset_n) begin
     if(!reset_n) begin
-        mmap_window_0 <= 8'h00;
-        mmap_window_1 <= 8'h00;
-        mmap_window_2 <= 8'h00;
+        mmap_window_0 <= 8'h40;
+        mmap_window_1 <= 8'h40;
+        mmap_window_2 <= 8'h40;
         mmap_window_3 <= 8'h00;
     end else begin
         if(cpu_address_l == mem_window_0_port ) mmap_window_0 <= D;
@@ -142,17 +143,17 @@ assign D = (window_3_rd)?(8'hzz):(mmap_window_3);
 
 always @(*) begin  // TODO: Изучить как это работает.
 //always @(negedge CLK_24MHz) begin  
-    if(cpu_adr_page == 0) mmap_outp <= mmap_window_0;
-    if(cpu_adr_page == 1) mmap_outp <= mmap_window_1;
-    if(cpu_adr_page == 2) mmap_outp <= mmap_window_2;
-    if(cpu_adr_page == 3) mmap_outp <= mmap_window_3;
+    if(cpu_adr_window == 2'b00) mmap_outp <= mmap_window_0;
+    if(cpu_adr_window == 2'b01) mmap_outp <= mmap_window_1;
+    if(cpu_adr_window == 2'b10) mmap_outp <= mmap_window_2;
+    if(cpu_adr_window == 2'b11) mmap_outp <= mmap_window_3;
 end
 
-assign ext_mem_adr    =  mmap_outp[4:0];
-assign slow_rom_ce_n  =  mmap_outp[6] ? 1'b1 :  mmap_outp[5];
-assign slow_ram_ce_n  =  mmap_outp[6] ? 1'b1 : ~mmap_outp[5];
-assign fast_ram0_ce_n = ~mmap_outp[6] ? 1'b1 :  mmap_outp[1];
-assign fast_ram1_ce_n = ~mmap_outp[6] ? 1'b1 : ~mmap_outp[1];
+assign ext_mem_adr    = mmap_outp[4:0];
+assign slow_rom_ce_n  = mreq_n | ( mmap_outp[6] ? 1'b1 :  mmap_outp[5]);
+assign slow_ram_ce_n  = mreq_n | ( mmap_outp[6] ? 1'b1 : ~mmap_outp[5]);
+assign fast_ram0_ce_n = mreq_n | (~mmap_outp[6] ? 1'b1 :  mmap_outp[1]);
+assign fast_ram1_ce_n = mreq_n | (~mmap_outp[6] ? 1'b1 : ~mmap_outp[1]);
 
 
 // 16550
