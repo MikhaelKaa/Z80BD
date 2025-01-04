@@ -55,3 +55,4 @@
 /Proto_on_slot/CPLD/src/*.vcd
 /Proto_on_socket/HW/History/*.Zip
 /Proto_on_socket/HW/src/*.log
+/Proto_on_slot/FW_test/build
