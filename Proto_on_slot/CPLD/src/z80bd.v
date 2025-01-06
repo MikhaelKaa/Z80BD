@@ -93,7 +93,9 @@ reg [3:0] cpu_clk_div = 4'h0;
 always @(negedge CLK_24MHz) begin
     cpu_clk_div = cpu_clk_div + 1;
 end
-assign cpu_clock = system_reg[2]? CLK_24MHz : (cpu_clk_div[~system_reg[1:0]]);
+assign cpu_clock = (system_reg[2]? CLK_24MHz : (cpu_clk_div[~system_reg[1:0]]))?1'b0:1'bz;
+//assign cpu_clock = (system_reg[2]? cpu_clk_div[2'b11] : (cpu_clk_div[2'b11]))?1'b0:1'bz;
+
 
 // System register wr & rd.
 reg [7:0] system_reg = 8'h00;
@@ -109,18 +111,18 @@ assign D = (system_rd)?(8'hzz):(system_reg);
 
 // Memory mapper
 wire [1:0] cpu_adr_window = cpu_address[15:14];
-reg [7:0] mmap_window_0 = 8'h40;
-reg [7:0] mmap_window_1 = 8'h40;
-reg [7:0] mmap_window_2 = 8'h40;
-reg [7:0] mmap_window_3 = 8'h40;
+reg [7:0] mmap_window_0 = 8'h00;
+reg [7:0] mmap_window_1 = 8'h00;
+reg [7:0] mmap_window_2 = 8'h00;
+reg [7:0] mmap_window_3 = 8'h00;
 reg [7:0] mmap_outp     = 8'h00;
 
 // Write memory map registers.
 always @(negedge iowr_n or negedge reset_n) begin
     if(!reset_n) begin
-        mmap_window_0 <= 8'h40;
-        mmap_window_1 <= 8'h40;
-        mmap_window_2 <= 8'h40;
+        mmap_window_0 <= 8'h00;
+        mmap_window_1 <= 8'h00;
+        mmap_window_2 <= 8'h00;
         mmap_window_3 <= 8'h00;
     end else begin
         if(cpu_address_l == mem_window_0_port ) mmap_window_0 <= D;
