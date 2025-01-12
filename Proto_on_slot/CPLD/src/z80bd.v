@@ -44,7 +44,7 @@ parameter mem_window_1_port =   8'h11;
 parameter mem_window_2_port =   8'h12;
 parameter mem_window_3_port =   8'h14;
 
-parameter system_port       =   8'h20;
+parameter system_port       =   8'h18;
 // bit 2 - 24 MHz
 // bit 1:0 - 12, 6, 3, 1.5 MHz
 
@@ -93,8 +93,8 @@ reg [3:0] cpu_clk_div = 4'h0;
 always @(negedge CLK_24MHz) begin
     cpu_clk_div = cpu_clk_div + 1;
 end
-assign cpu_clock = (system_reg[2]? CLK_24MHz : (cpu_clk_div[~system_reg[1:0]]))?1'b0:1'bz;
-//assign cpu_clock = (system_reg[2]? cpu_clk_div[2'b11] : (cpu_clk_div[2'b11]))?1'b0:1'bz;
+//assign cpu_clock = (system_reg[2]? CLK_24MHz : (cpu_clk_div[~system_reg[1:0]]))?1'b0:1'bz;
+assign cpu_clock = (system_reg[2]? cpu_clk_div[2'b11] : (cpu_clk_div[2'b11]))?1'b0:1'bz;
 
 
 // System register wr & rd.
@@ -152,10 +152,10 @@ always @(*) begin  // TODO: Изучить как это работает.
 end
 
 assign ext_mem_adr    = mmap_outp[4:0];
-assign slow_rom_ce_n  = mreq_n | ( mmap_outp[6] ? 1'b1 :  mmap_outp[5]);
-assign slow_ram_ce_n  = mreq_n | ( mmap_outp[6] ? 1'b1 : ~mmap_outp[5]);
-assign fast_ram0_ce_n = mreq_n | (~mmap_outp[6] ? 1'b1 :  mmap_outp[1]);
-assign fast_ram1_ce_n = mreq_n | (~mmap_outp[6] ? 1'b1 : ~mmap_outp[1]);
+assign slow_rom_ce_n  = mreq_n | (( mmap_outp[6] | mmap_outp[7]) ? 1'b1 :  mmap_outp[5]);
+assign slow_ram_ce_n  = mreq_n | (( mmap_outp[6] | mmap_outp[7]) ? 1'b1 : ~mmap_outp[5]);
+assign fast_ram0_ce_n = mreq_n | ((~mmap_outp[6] | mmap_outp[7] | mmap_outp[5] | mmap_outp[4] | mmap_outp[3] | mmap_outp[2] ) ? 1'b1 :  mmap_outp[1]);
+assign fast_ram1_ce_n = mreq_n | ((~mmap_outp[6] | mmap_outp[7] | mmap_outp[5] | mmap_outp[4] | mmap_outp[3] | mmap_outp[2] ) ? 1'b1 : ~mmap_outp[1]);
 
 
 // 16550

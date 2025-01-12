@@ -6,4 +6,7 @@ build:
 clean:
 	rm -f build/*.bin
 
+flash:
+	PCProg.exe COM18 build/test.bin
+
 .PHONY: all build clean
