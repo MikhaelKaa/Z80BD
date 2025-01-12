@@ -34,7 +34,9 @@ module z80bd (
     // 16550
     output U_CS,
     output U_CLK,
-    input  U_INT
+    input  U_INT,
+	 
+    output	[7:0]  Dtest
 );
 
 
@@ -44,7 +46,7 @@ parameter mem_window_1_port =   8'h11;
 parameter mem_window_2_port =   8'h12;
 parameter mem_window_3_port =   8'h14;
 
-parameter system_port       =   8'h18;
+parameter system_port       =   8'h20;
 // bit 2 - 24 MHz
 // bit 1:0 - 12, 6, 3, 1.5 MHz
 
@@ -89,25 +91,37 @@ wire iowr_n = iorq_n | wr_n;
 wire iord_n = iorq_n | rd_n;
 
 // Clock
+reg [2:0] z80_clk = 3'b0;
 reg [3:0] cpu_clk_div = 4'h0;
-always @(negedge CLK_24MHz) begin
-    cpu_clk_div = cpu_clk_div + 1;
-end
-//assign cpu_clock = (system_reg[2]? CLK_24MHz : (cpu_clk_div[~system_reg[1:0]]))?1'b0:1'bz;
-assign cpu_clock = (system_reg[2]? cpu_clk_div[2'b11] : (cpu_clk_div[2'b11]))?1'b0:1'bz;
 
+always @(negedge CLK_24MHz) begin
+    cpu_clk_div = cpu_clk_div + 1'b1;
+end
+
+always @(negedge iord_n or negedge reset_n) begin
+        if(!reset_n) begin
+        z80_clk <= 3'h0;
+    end else begin
+        if(cpu_address_l == system_port ) z80_clk = system_reg[2:0];
+    end
+end
+assign cpu_clock = (cpu_clk_div[~system_reg[1:0]])?1'b0:1'bz;
+//assign cpu_clock = (system_reg[2]? CLK_24MHz : (cpu_clk_div[~system_reg[1:0]]))?1'b0:1'bz;
+//assign cpu_clock = (system_reg[2]? cpu_clk_div[2'b11] : (cpu_clk_div[2'b11]))?1'b0:1'bz;
 
 // System register wr & rd.
 reg [7:0] system_reg = 8'h00;
 always @(negedge iowr_n or negedge reset_n) begin
     if(!reset_n) begin
-        system_reg <= 8'h00;
+        //system_reg <= 8'h00;
     end else begin
-        if(cpu_address_l == system_port ) system_reg <= D;
+        if(cpu_address_l == system_port ) system_reg = D;
     end
 end
 wire system_rd = (~(cpu_address_l == system_port)) | iord_n;
 assign D = (system_rd)?(8'hzz):(system_reg);
+
+assign Dtest = system_reg;
 
 // Memory mapper
 wire [1:0] cpu_adr_window = cpu_address[15:14];

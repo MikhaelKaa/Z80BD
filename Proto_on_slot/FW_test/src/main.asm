@@ -6,7 +6,7 @@ mem_window_0_port EQU 0x0010
 mem_window_1_port EQU 0x0011
 mem_window_2_port EQU 0x0012
 mem_window_3_port EQU 0x0014
-system_port       EQU 0x0018
+system_port       EQU 0x0020
 
 ; uart_16550_port   EQU 0x00ef
 uart_reg_0        EQU 0xf8ef
@@ -59,11 +59,27 @@ uart_reg_7        EQU 0xffef
     ld	a, 0x0f
     ld bc, 0xfcef
     out	(c),a
-    
+
+
+    nop
+    nop
+    nop
     ; Z80 clock
-    ld	a, 0x01
+    ld	a, 0x02
     ld	bc, system_port
     out	(c), a
+    nop
+    nop
+    nop
+    nop
+    nop
+    in	a, (c)
+    nop
+    nop
+    nop
+    nop
+    nop
+
 
     ld e, 0
     ld a, 0x53; S

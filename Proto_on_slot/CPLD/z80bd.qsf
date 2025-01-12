@@ -96,3 +96,11 @@ set_location_assignment PIN_29 -to U_CLK
 set_location_assignment PIN_28 -to U_CS
 set_location_assignment PIN_27 -to U_INT
 set_location_assignment PIN_88 -to WR
+set_location_assignment PIN_10 -to Dtest[7]
+set_location_assignment PIN_9 -to Dtest[6]
+set_location_assignment PIN_8 -to Dtest[5]
+set_location_assignment PIN_1 -to Dtest[0]
+set_location_assignment PIN_2 -to Dtest[1]
+set_location_assignment PIN_5 -to Dtest[2]
+set_location_assignment PIN_6 -to Dtest[3]
+set_location_assignment PIN_7 -to Dtest[4]
